@@ -1,0 +1,12 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: monorepo-app-1
+  namespace: default
+spec:
+  interval: 10m
+  path: "./apps/monorepo-app-1/deploy"
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name:  monorepo-app-1
