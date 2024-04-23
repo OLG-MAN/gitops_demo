@@ -1,17 +1,52 @@
 ### GitOps DEMO 
 
-Infrastructure - wsl2 + [kind](https://kind.sigs.k8s.io/docs/user/using-wsl2/) cluster
+Infrastructure - wsl2/Docker-desktop + [kind](https://kind.sigs.k8s.io/docs/user/using-wsl2/) cluster
 CICD tools     - GitHub Actions, [FluxCD](https://fluxcd.io/flux/get-started/)
 OCI            - DockerHub, GitHub Container Registry (GHCR)
 
 #### Demo Steps
 
-##### Install Steps
+##### Install, Bootstrap Steps
 
 ```
-# Test with Nginx
+# WSL2 OPTION
+# Installing kind on WSL2 (Windows 11), 
+# Docker already pre-installed https://docs.docker.com/install/
 
-kind create cluster --config=cluster-config.yml
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.22.0/kind-linux-amd64
+chmod +x ./kind
+mv ./kind /usr/local/bin/kind
+kind version
+```
+
+```
+# Docker-desktop OPTION
+# Installing kind onWindows 11
+
+curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.22.0/kind-windows-amd64
+Move-Item .\kind-windows-amd64.exe c:\some-dir-in-your-PATH\kind.exe
+```
+
+```
+# Start kind cluster
+
+# WSL2 option
+kind create cluster --name demo --config=cluster-config.yml
+
+# Docker-desktop option (Powershell)
+kind create cluster --name demo --config=cluster-config.yml
+```
+
+```
+# Start working container wifor interaction with kind cluster (For Docker-desktop option)
+
+docker run -it --rm -v ${HOME}:/root/ -v ${PWD}:/git -w /git --net host olegan/work-container:v2.8
+```
+
+```
+# Test cluster with Nginx 
+
+kubectl get nodes -o wide 
 kubectl create deployment nginx --image=nginx --port=80
 kubectl create service nodeport nginx --tcp=80:80 --node-port=30000
 curl localhost:30000
@@ -24,16 +59,15 @@ curl -o /tmp/flux.tar.gz -sLO https://github.com/fluxcd/flux2/releases/download/
 tar -C /tmp/ -zxvf /tmp/flux.tar.gz
 mv /tmp/flux /usr/local/bin/flux
 chmod +x /usr/local/bin/flux
-
 # OR
-
 curl -s https://fluxcd.io/install.sh | sudo bash
 
 # And make pre=check
 
+flux --version
 flux check --pre
 ```
-
+ 
 ```
 # Bootstrap FluxCD with 'gitops_demo' repository (monorepo approach)
 
