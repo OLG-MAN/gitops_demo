@@ -1,8 +1,9 @@
 ### GitOps DEMO 
 
-Infrastructure - wsl2/Docker-desktop + [kind](https://kind.sigs.k8s.io/docs/user/using-wsl2/) cluster
-CICD tools     - GitHub Actions, [FluxCD](https://fluxcd.io/flux/get-started/)
-OCI            - DockerHub, GitHub Container Registry (GHCR)
+<strong>Infrastructure</strong> - WSL2/Docker-desktop + [kind](https://kind.sigs.k8s.io/docs/user/using-wsl2/) cluster
+<strong>CI/CD tools</strong> - GitHub Actions, [FluxCD](https://fluxcd.io/flux/get-started/), ArgoCD
+<strong>OCI</strong> - Kind local registry, DockerHub, GHCR, Helm Charts.
+<strong>Monitoring</strong> - Prometheus, Grafana, Loki.
 
 #### Demo Steps
 
@@ -20,8 +21,7 @@ kind version
 ```
 
 ```
-# Docker-desktop OPTION
-# Installing kind onWindows 11
+# Windows 11 OPTION with docker-desktop 
 
 curl.exe -Lo kind-windows-amd64.exe https://kind.sigs.k8s.io/dl/v0.22.0/kind-windows-amd64
 Move-Item .\kind-windows-amd64.exe c:\some-dir-in-your-PATH\kind.exe
@@ -39,13 +39,11 @@ kind create cluster --name demo --config=cluster-config.yml
 
 ```
 # Start working container wifor interaction with kind cluster (For Docker-desktop option)
-
 docker run -it --rm -v ${HOME}:/root/ -v ${PWD}:/git -w /git --net host olegan/work-container:v2.8
 ```
 
 ```
 # Test cluster with Nginx 
-
 kubectl get nodes -o wide 
 kubectl create deployment nginx --image=nginx --port=80
 kubectl create service nodeport nginx --tcp=80:80 --node-port=30000
@@ -54,16 +52,14 @@ curl localhost:30000
 
 ```
 # Install FluxCD
-
 curl -o /tmp/flux.tar.gz -sLO https://github.com/fluxcd/flux2/releases/download/v2.2.3/flux_2.2.3_linux_amd64.tar.gz
 tar -C /tmp/ -zxvf /tmp/flux.tar.gz
 mv /tmp/flux /usr/local/bin/flux
 chmod +x /usr/local/bin/flux
 # OR
-curl -s https://fluxcd.io/install.sh | sudo bash
+curl -s https://fluxcd.io/install.sh | bash
 
 # And make pre=check
-
 flux --version
 flux check --pre
 ```
@@ -77,10 +73,10 @@ flux bootstrap github \
   --repository=gitops_demo \
   --branch=main \
   --path=./flux-clusters/demo-cluster \
-  --personal 
+  --personal
 ```
 
-##### Git Source with Flux (base example)
+##### Git Source with Flux (base doc example)
 
 ```
 flux create source git podinfo \
@@ -102,4 +98,20 @@ flux create kustomization podinfo \
   --retry-interval=2m \
   --health-check-timeout=3m \
   --export > ./flux-clusters/demo-cluster/podinfo-kustomization.yaml
+```
+
+##### Build and push image for monorepo-app-1
+```
+# Build app with Docker (on Win11)
+docker build -t monorepo-app-1:0.0.1 ./apps/monorepo-app-1/src
+
+# Load the image to our demo kind cluster
+kind load docker-image monorepo-app-1:0.0.1 --name demo
+```
+
+##### Apply app infra with flux for monorepo-app-1
+```
+# applying flux get source and kustomization
+kubectl apply -f ./app-infra/monorepo-app-1/gitrepository.yaml
+kubectl apply -f ./app-infra/monorepo-app-1/kustomization.yaml
 ```
