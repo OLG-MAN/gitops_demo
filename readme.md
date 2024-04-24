@@ -1,8 +1,8 @@
 ### GitOps DEMO 
 
-<strong>Infrastructure</strong> - WSL2/Docker-desktop + [kind](https://kind.sigs.k8s.io/docs/user/using-wsl2/) cluster
-<strong>CI/CD tools</strong> - GitHub Actions, [FluxCD](https://fluxcd.io/flux/get-started/), ArgoCD
-<strong>OCI</strong> - Kind local registry, DockerHub, GHCR, Helm Charts.
+<strong>Infrastructure</strong> - WSL2/Docker-desktop + [kind](https://kind.sigs.k8s.io/docs/user/using-wsl2/) cluster\
+<strong>CI/CD tools</strong> - GitHub Actions, [FluxCD](https://fluxcd.io/flux/get-started/), ArgoCD\
+<strong>OCI</strong> - Kind local registry, DockerHub, GHCR, Helm Charts.\
 <strong>Monitoring</strong> - Prometheus, Grafana, Loki.
 
 #### Demo Steps
