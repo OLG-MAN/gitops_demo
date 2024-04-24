@@ -20,5 +20,5 @@ spec:
     push:
       branch: main
   update:
-    path: ./app-infra/monorepo-app-2/deploy/deployment.yaml
+    path: ./apps-infra/monorepo-app-2/deploy/deployment.yaml
     strategy: Setters

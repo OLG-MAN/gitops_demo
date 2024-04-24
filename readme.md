@@ -169,4 +169,16 @@ kubectl apply -f ./apps-infra/monorepo-app-2/imagepolicy.yaml
 kubectl apply -f ./apps-infra/monorepo-app-2/imageupdateautomation.yaml
 ```
 
+```
+# Make application changes and rebuild + push
+docker build -t olegan/monorepo-app-2:0.0.2 ./apps/monorepo-app-2/src
+docker push olegan/monorepo-app-2:0.0.2
 
+# Check changes in flux image controller objects
+kubectl describe imagerepository
+kubectl describe imagepolicy monorepo-app-2
+kubectl describe imageupdateautomation monorepo-app-2
+
+flux -n default get all
+kubectl get all
+```
