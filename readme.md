@@ -112,6 +112,61 @@ kind load docker-image monorepo-app-1:0.0.1 --name demo
 ##### Apply app infra with flux for monorepo-app-1
 ```
 # applying flux get source and kustomization
-kubectl apply -f ./app-infra/monorepo-app-1/gitrepository.yaml
-kubectl apply -f ./app-infra/monorepo-app-1/kustomization.yaml
+kubectl apply -f ./apps-infra/monorepo-app-1/gitrepository.yaml
+kubectl apply -f ./apps-infra/monorepo-app-1/kustomization.yaml
 ```
+
+##### Update/Build/push monorepo-app-1
+```
+# Change app version in app.py and deployment.yaml files
+--- ./apps/monorepo-app-1/src/app.py
+--- ./apps/monorepo-app-1/deploy/deployment.yaml
+
+# Build app with Docker (on Win11)
+docker build -t monorepo-app-1:0.0.2 ./apps/monorepo-app-1/src
+
+# Load the image to our demo kind cluster
+kind load docker-image monorepo-app-1:0.0.2 --name demo
+
+# Commit and push changes to the repo
+git add .
+git commit  -m "Update monorepo-app-1 to 0.0.2"
+git push
+
+# Check the app in the cluster
+kubectl get all
+```
+
+##### Using image controller approach for CD (Auto deploy by scanning image registry)
+
+```
+# Re-bootsrap FluxCD with image controller
+flux bootstrap github \
+  --token-auth \
+  --owner=OLG-MAN \
+  --repository=gitops_demo \
+  --branch=main \
+  --path=./flux-clusters/demo-cluster \
+  --components-extra=image-reflector-controller,image-automation-controller \
+  --personal
+
+# Deploy a secret with DockerHub credentials (If your imagerepository not public) e.g.:
+kubectl -n default create secret docker-registry dockerhub-credential --docker-username '' --docker-password '' --docker-email 'test@test.com'
+```
+
+```
+# Build and push monorepo-app-2 to DockerHub
+docker build -t olegan/monorepo-app-2:0.0.1 ./apps/monorepo-app-2/src
+docker push olegan/monorepo-app-2:0.0.1
+
+# Apply main flux objects
+kubectl apply -f ./apps-infra/monorepo-app-2/gitrepository.yaml
+kubectl apply -f ./apps-infra/monorepo-app-2/kustomization.yaml
+
+# Apply image controller objects
+kubectl apply -f ./apps-infra/monorepo-app-2/imagerepository.yaml
+kubectl apply -f ./apps-infra/monorepo-app-2/imagepolicy.yaml
+kubectl apply -f ./apps-infra/monorepo-app-2/imageupdateautomation.yaml
+```
+
+
