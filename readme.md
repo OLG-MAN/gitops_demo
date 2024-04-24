@@ -159,6 +159,14 @@ kubectl -n default create secret docker-registry dockerhub-credential --docker-u
 docker build -t olegan/monorepo-app-2:0.0.1 ./apps/monorepo-app-2/src
 docker push olegan/monorepo-app-2:0.0.1
 
+# Create a secret for github repo push
+flux -n default create secret git monorepo-app-2-git-deploy --url=ssh://git@github.com/OLG-MAN/gitops_demo.git
+
+# Copy value and paste to deploy keys in target github repo settings
+# Check "Allow write access" and add deploy key
+```
+
+```
 # Apply main flux objects
 kubectl apply -f ./apps-infra/monorepo-app-2/gitrepository.yaml
 kubectl apply -f ./apps-infra/monorepo-app-2/kustomization.yaml
