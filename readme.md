@@ -122,6 +122,7 @@ kubectl apply -f ./apps-infra/monorepo-app-1/kustomization.yaml
 
 # Check app in kind cluster
 kubectl get all
+flux -n default get all
 ```
 
 ##### Update/Build/Push monorepo-app-1
