@@ -7,7 +7,7 @@ spec:
   interval: 1m0s
   ref:
     branch: main
-  url: https://github.com/OLG-MAN/gitops_demo.git
-  # url: ssh://git@github.com/OLG-MAN/gitops_demo.git
-  # secretRef:
-  #   name: monorepo-app-2-git-deploy
+  # url: https://github.com/OLG-MAN/gitops_demo.git
+  url: ssh://git@github.com/OLG-MAN/gitops_demo.git
+  secretRef:
+    name: monorepo-app-2-git-deploy
