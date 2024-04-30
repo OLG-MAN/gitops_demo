@@ -213,14 +213,15 @@ docker push olegan/helm-git-app:0.0.1
 flux create source git helm-git-app \
   --url=https://github.com/OLG-MAN/gitops_demo_app \
   --branch=helm-git-app \
-  --timeout=1m \
+  --namespace=default \
+  --timeout=1m   \
   --export > ./apps-infra/helm-git-app/gitrepository.yaml
 
 
 # Creating Helm Release for app based on git repo source
 flux create hr helm-git-app \
   --release-name=helm-git-app \
-  --target-namespace=default \
+  --namespace=default \
   --source=GitRepository/helm-git-app \
   --chart=helm-chart \
   --interval=1m \
