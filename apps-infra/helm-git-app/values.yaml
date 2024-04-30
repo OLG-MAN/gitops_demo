@@ -1,0 +1,15 @@
+name: helm-git-app2
+
+deployment:
+  replicas: 2
+  namespace: default
+  image: olegan/helm-git-app
+  tag: 0.0.2
+
+services:
+  protocol: TCP
+  name: http
+  type: NodePort
+  port: 5000
+  targetPort: 5000
+  nodePort: 30004
