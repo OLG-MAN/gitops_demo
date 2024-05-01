@@ -85,6 +85,7 @@ flux bootstrap github \
 ```
 flux create source git podinfo \
   --url=https://github.com/stefanprodan/podinfo \
+  --namespace=default \
   --branch=master \
   --interval=1m \
   --export > ./flux-clusters/demo-cluster/podinfo-source.yaml
@@ -93,6 +94,7 @@ flux create source git podinfo \
 ##### Kustomization with Flux (apply pod info app, base example)
 ```
 flux create kustomization podinfo \
+  --namespace=default \
   --target-namespace=default \
   --source=podinfo \
   --path="./kustomize" \
