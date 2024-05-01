@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>K8s Info App</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Titan+One&family=Rubik">
+</head>
+<body style="background-color: #ffffff">
+  <div class="container">
+    <h1 class="text-center mt-5 stroke-text" style="font-family: 'Titan One', cursive;">K8s Info App</h1>
+    <h2 class="text-center mt-5 stroke-text" style="font-family: 'Titan One', cursive;">{{ app_title }}</h2>
+    <table class="table table-dark table-striped mt-5">
+      <thead>
+        <tr>
+          <th scope="col">Pod Name</th>
+          <th scope="col">{{ pod_name }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Pod IP</th>
+          <td>{{ pod_ip }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Namespace</th>
+          <td>{{ namespace }}</td>
+        </tr>
+        <tr>
+          <th scope="row">K8S Node</th>
+          <td>{{ node_name }}</td>
+        </tr>
+        <tr>
+          <th scope="row">App Version</th>
+          <td>{{ app_version }}</td>
+        </tr>
+        <tr>
+          <th scope="row">Description</th>
+          <td>{{ description }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

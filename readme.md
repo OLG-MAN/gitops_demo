@@ -242,14 +242,15 @@ docker push olegan/helm-git-app:0.0.2
 
 # Create 2nd Helm Release based on same git source
 # but with our local changed values from flux infra repo
-flux create hr helm-git-app2 \
-  --release-name=helm-git-app2 \
-  --target-namespace=default \
-  --source=GitRepository/helm-git-app \
-  --chart=helm-chart \
-  --values=./apps-infra/helm-git-app/values.yaml \
-  --interval=1m \
-  --timeout=1m \
+  flux create hr helm-git-app2 \
+    --release-name=helm-git-app2 \
+    --namespace=default \
+    --target-namespace=default \
+    --source=GitRepository/helm-git-app \
+    --chart=helm-chart \
+    --values=./apps-infra/helm-git-app/values.yaml \
+    --interval=1m \
+    --timeout=1m \
   --export > ./apps-infra/helm-git-app/helmrelease2.yaml
 
 # Checking app
