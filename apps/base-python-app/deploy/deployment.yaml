@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: k8s-info-app
-          image: python-app:0.0.1
+          image: olegan/k8s-info-app:0.0.1
           ports:
           - containerPort: 5000
           resources:

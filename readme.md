@@ -242,15 +242,15 @@ docker push olegan/helm-git-app:0.0.2
 
 # Create 2nd Helm Release based on same git source
 # but with our local changed values from flux infra repo
-  flux create hr helm-git-app2 \
-    --release-name=helm-git-app2 \
-    --namespace=default \
-    --target-namespace=default \
-    --source=GitRepository/helm-git-app \
-    --chart=helm-chart \
-    --values=./apps-infra/helm-git-app/values.yaml \
-    --interval=1m \
-    --timeout=1m \
+flux create hr helm-git-app2 \
+  --release-name=helm-git-app2 \
+  --namespace=default \
+  --target-namespace=default \
+  --source=GitRepository/helm-git-app \
+  --chart=helm-chart \
+  --values=./apps-infra/helm-git-app/values.yaml \
+  --interval=1m \
+  --timeout=1m \
   --export > ./apps-infra/helm-git-app/helmrelease2.yaml
 
 # Checking app
@@ -273,7 +273,7 @@ chmod 700 get_helm.sh
 
 # Creating Helm Repository (based on GitHub pages)
 helm package ./helm-chart/
-helm repo index --url  https://olg-man.github.io/gitops_demo_app/
+helm repo index --url  https://olg-man.github.io/gitops_demo_app/ .
 
 # Push changes to repo
 # Create a GitHub pages by `helm-repo-app` branch
@@ -287,11 +287,13 @@ helm repo index --url  https://olg-man.github.io/gitops_demo_app/
 # Creating Helm repo source 
 flux create source helm helm-repo-app \
   --url=https://olg-man.github.io/gitops_demo_app/ \
-  --interval=10m
+  --namespace=default \
+  --interval=1m
 
 # Creating Helm Release for app based on Helm repo source
 flux create hr helm-repo-app \
   --release-name=helm-repo-app \
+  --namespace=default \
   --target-namespace=default \
   --source=HelmRepository/helm-repo-app \
   --chart=helm-repo-app \
@@ -396,6 +398,16 @@ flux create hr ghcr-helm-app --release-name=ghcr-helm-app --target-namespace=def
 kubectl get all
 curl localhost:30007
 ```
+
+##### Python k8s info app
+```
+# Build and push app with Docker (on Win11) 
+docker build -t olegan/k8s-info-app:0.0.1 ./apps/base-python-app/src
+docker push olegan/k8s-info-app:0.0.1
+
+# Apply on kind cluster
+kubectl apply -f ./apps/base-python-app/deploy/
+
 
 ##### Monitoring (TBD)
 ##### Prometheus, Grafana, Loki (TBD)
