@@ -199,8 +199,8 @@ kubectl describe imagerepository
 kubectl describe imagepolicy monorepo-app-2
 kubectl describe imageupdateautomation monorepo-app-2
 
-flux -n default get all
-kubectl get all
+watch flux -n default get all
+watch kubectl get all
 ```
 
 ##### Separate repo app 1: helm-git-app (imperative way)
