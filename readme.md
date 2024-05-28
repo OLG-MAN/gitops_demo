@@ -407,9 +407,27 @@ docker push olegan/k8s-info-app:0.0.1
 
 # Apply on kind cluster
 kubectl apply -f ./apps/base-python-app/deploy/
-
+```
 
 ##### Monitoring (TBD)
+```
+# Using https://github.com/fluxcd/flux2-monitoring-example as a base and implement it in our demo
+in paths:
+./monitoring
+./scripting
+./flux-cluster/demo-cluster/monitoring.yaml
+
+# Bootstraping flux cluster with monitoring
+flux bootstrap github \
+  --token-auth \
+  --owner=OLG-MAN \
+  --repository=gitops_demo \
+  --branch=main \
+  --path=./flux-clusters/demo-cluster \
+  --components-extra=image-reflector-controller,image-automation-controller \
+  --personal
+```
+
 ##### Prometheus, Grafana, Loki (TBD)
 
 
