@@ -78,6 +78,13 @@ flux bootstrap github \
   --path=./flux-clusters/demo-cluster \
   --personal
 ```
+flux bootstrap github \
+--owner=OLG-MAN \
+--repository=gitops_demo \
+--private=false \
+--personal=true \ 
+--path=./clusters/flux-cluster
+
 
 ##### Basic Example
 ##### Git Source with Flux (base doc example)
