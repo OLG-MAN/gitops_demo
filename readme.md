@@ -42,7 +42,7 @@ kind create cluster --name demo --config=cluster-config.yml
 docker run -it --rm -v $HOME:/root/ -v $PWD:/git -w /git --net host olegan/work-container:v2.8
 
 # Start working container for interaction with kind cluster (For Docker-desktop option)
-docker run -it --rm -v ${HOME}:/root/ -v ${PWD}:/git -w /git --net host olegan/work-container:v2.8
+docker run -it --rm -v ${HOME}:/root/ -v ${PWD}:/git -w /git --net host olegan/work-container:v3.0
 ```
 
 ```
