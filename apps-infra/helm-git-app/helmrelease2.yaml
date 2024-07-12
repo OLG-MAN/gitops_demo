@@ -1,0 +1,31 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: helm-git-app2
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: helm-chart
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: GitRepository
+        name: helm-git-app
+  interval: 1m0s
+  releaseName: helm-git-app2
+  targetNamespace: default
+  values:
+    deployment:
+      image: olegan/helm-git-app
+      namespace: default
+      replicas: 2
+      tag: 0.0.2
+    name: helm-git-app2
+    services:
+      name: http
+      nodePort: 30004
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+      type: NodePort

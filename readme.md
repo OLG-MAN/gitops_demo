@@ -78,40 +78,6 @@ flux bootstrap github \
   --path=./flux-clusters/demo-cluster \
   --personal
 ```
-flux bootstrap github \
---owner=OLG-MAN \
---repository=gitops_demo \
---private=false \
---personal=true \ 
---path=./clusters/flux-cluster
-
-
-##### Basic Example
-##### Git Source with Flux (base doc example)
-
-```
-flux create source git podinfo \
-  --url=https://github.com/stefanprodan/podinfo \
-  --namespace=default \
-  --branch=master \
-  --interval=1m \
-  --export > ./flux-clusters/demo-cluster/podinfo-source.yaml
-```
-
-##### Kustomization with Flux (apply pod info app, base example)
-```
-flux create kustomization podinfo \
-  --namespace=default \
-  --target-namespace=default \
-  --source=podinfo \
-  --path="./kustomize" \
-  --prune=true \
-  --wait=true \
-  --interval=30m \
-  --retry-interval=2m \
-  --health-check-timeout=3m \
-  --export > ./flux-clusters/demo-cluster/podinfo-kustomization.yaml
-```
 
 ##### Monorepo app 1 (declarative way)
 ##### Git repository source approach for CD (Auto deploy by scanning git repo)
@@ -274,16 +240,16 @@ docker build -t olegan/helm-repo-app:0.0.1 ./src
 docker push olegan/helm-repo-app:0.0.1
 
 # Install Helm (if need)
-curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-chmod 700 get_helm.sh
-./get_helm.sh
+curl -fsSL -o /git/get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 /git/get_helm.sh
+/git/get_helm.sh
 
 # Creating Helm Repository (based on GitHub pages)
 helm package ./helm-chart/
 helm repo index --url  https://olg-man.github.io/gitops_demo_app/ .
-
 # Push changes to repo
 # Create a GitHub pages by `helm-repo-app` branch
+
 # (optionally)
 # Create a repo on ArtifactHub, link it to the Github pages 
 # Create a artifacthub-repo.yml metadata with needed values from ArtifactHub
@@ -295,7 +261,8 @@ helm repo index --url  https://olg-man.github.io/gitops_demo_app/ .
 flux create source helm helm-repo-app \
   --url=https://olg-man.github.io/gitops_demo_app/ \
   --namespace=default \
-  --interval=1m
+  --interval=1m \
+  --export > ./apps-infra/helm-repo-app/helmrepository.yaml
 
 # Creating Helm Release for app based on Helm repo source
 flux create hr helm-repo-app \
@@ -340,7 +307,8 @@ flux push artifact oci://ghcr.io/olg-man/ghcr-app:0.0.1-$(git rev-parse --short 
 # Create an OCI source in flux
 flux create source oci ghcr-app \
   --url=oci://ghcr.io/olg-man/ghcr-app \
-  --tag=0.0.1-3a2e66f
+  --namespace=default \
+  --tag=0.0.1-d514bc2 \
   --export > ./apps-infra/ghcr-app/ocisource.yaml
 
 # (Optional) Create a secret if oci source is private
@@ -349,12 +317,14 @@ flux create secret oci ghcr-app \
   --username <user-name> \
   --password <password>
 
-# Create a Kustomizatoin for app based on OCI source
+# Create a Kustomization for app based on OCI source
 flux create kustomization ghcr-app \
   --source=OCIRepository/ghcr-app \
   --target-namespace=default \
+  --namespace=default \
   --prune=true \
-  --interval=5m
+  --interval=5m \
+  --export > ./apps-infra/ghcr-app/kustomization.yaml
 
 # Check app
 kubectl get all
@@ -378,7 +348,9 @@ chmod 700 get_helm.sh
 helm package ./helm-chart/
 
 # Loging to GHCR registry with helm 
-helm registry login ghcr.i -u olg-man
+helm registry login ghcr.io -u olg-man 
+OR
+docker login ghcr.io -u olg-man 
 
 # Push Helm chart/package to GHCR
 helm push ghcr-helm-app-0.0.1.tgz oci://ghcr.io/olg-man/
@@ -387,19 +359,22 @@ helm push ghcr-helm-app-0.0.1.tgz oci://ghcr.io/olg-man/
 ```
 # Create an Helm repo based OCI GHCR source
 flux create source helm ghcr-helm-app \
-  --url=oci://ghcr.io/olg-man/ghcr-helm-app \
+  --url=oci://ghcr.io/olg-man \
+  --namespace=default \
   --export > ./apps-infra/ghcr-helm-app/ocisource.yaml
 
 # Create a HelmRelease for app based on OCI source
 flux create hr ghcr-helm-app \
   --release-name=ghcr-helm-app \
   --target-namespace=default \
+  --namespace=default \
   --source=HelmRepository/ghcr-helm-app \
   --chart=ghcr-helm-app \
   --interval=1m \
   --export > ./apps-infra/ghcr-helm-app/helmrelease.yaml
 
-flux create hr ghcr-helm-app --release-name=ghcr-helm-app --target-namespace=default --source=HelmRepository/ghcr-helm-app --chart=ghcr-helm-app
+# Optionally, Helm analog of deploy your chart from ghcr
+helm upgrade --install ghcr-helm-app oci://ghcr.io/olg-man/ghcr-helm-app --version 0.0.1
 
 # Check app
 kubectl get all

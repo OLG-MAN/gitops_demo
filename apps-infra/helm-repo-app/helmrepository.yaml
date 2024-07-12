@@ -1,0 +1,9 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: helm-repo-app
+  namespace: default
+spec:
+  interval: 1m0s
+  url: https://olg-man.github.io/gitops_demo_app/

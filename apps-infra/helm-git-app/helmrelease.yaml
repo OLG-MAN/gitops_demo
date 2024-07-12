@@ -1,0 +1,16 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: helm-git-app
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: helm-chart
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: GitRepository
+        name: helm-git-app
+  interval: 1m0s
+  releaseName: helm-git-app

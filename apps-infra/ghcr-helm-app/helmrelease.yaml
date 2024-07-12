@@ -1,0 +1,17 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ghcr-helm-app
+  namespace: default
+spec:
+  chart:
+    spec:
+      chart: ghcr-helm-app
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        name: ghcr-helm-app
+  interval: 1m0s
+  releaseName: ghcr-helm-app
+  targetNamespace: default

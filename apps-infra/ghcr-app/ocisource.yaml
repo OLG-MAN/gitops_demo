@@ -1,0 +1,12 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
+metadata:
+  name: ghcr-app
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  provider: generic
+  ref:
+    tag: 0.0.1-3a2e66f
+  url: oci://ghcr.io/olg-man/ghcr-app
