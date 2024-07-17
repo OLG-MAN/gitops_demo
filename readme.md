@@ -411,7 +411,7 @@ flux bootstrap github \
   --components-extra=image-reflector-controller,image-automation-controller \
   --personal
 ```
-
+ 
 ##### Prometheus, Grafana, Loki (TBD)
 
 
