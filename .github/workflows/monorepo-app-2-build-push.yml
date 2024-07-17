@@ -2,8 +2,8 @@ name: Build and Push monorepo-app-2
 
 on:
   push:
-    paths:
-      - 'apps/monorepo-app-2/**'
+    branches:
+      - main
 
 jobs:
   build-and-push:
