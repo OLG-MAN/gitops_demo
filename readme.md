@@ -77,6 +77,8 @@ flux bootstrap github \
   --branch=main \
   --path=./flux-clusters/demo-cluster \
   --personal
+
+# DO NOT forget pull your repo after bootstrap/reconcilation
 ```
 
 ##### Monorepo app 1 (declarative way)
