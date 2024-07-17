@@ -31,35 +31,35 @@ jobs:
             echo "::set-output name=should_build::false"
           fi
 
-      - name: Get current version
-        id: get_version
-        run: |
-          VERSION=$(cat ./apps/monorepo-app-2/src/app_version.txt)
-          echo "Current version: $VERSION"
-          echo "::set-output name=current_version::$VERSION"
+      # - name: Get current version
+      #   id: get_version
+      #   run: |
+      #     VERSION=$(cat ./apps/monorepo-app-2/src/app_version.txt)
+      #     echo "Current version: $VERSION"
+      #     echo "::set-output name=current_version::$VERSION"
 
-      - name: Increment version
-        id: increment_version
-        run: |
-          current_version=${{ steps.get_version.outputs.current_version }}
-          IFS='.' read -ra ADDR <<< "$current_version"
-          major=${ADDR[0]}
-          minor=${ADDR[1]}
-          patch=${ADDR[2]}
-          new_patch=$((patch + 1))
-          new_version="$major.$minor.$new_patch"
-          echo "New version: $new_version"
-          echo $new_version > ./apps/monorepo-app-2/src/app_version.txt
-          echo "::set-output name=new_version::$new_version"
+      # - name: Increment version
+      #   id: increment_version
+      #   run: |
+      #     current_version=${{ steps.get_version.outputs.current_version }}
+      #     IFS='.' read -ra ADDR <<< "$current_version"
+      #     major=${ADDR[0]}
+      #     minor=${ADDR[1]}
+      #     patch=${ADDR[2]}
+      #     new_patch=$((patch + 1))
+      #     new_version="$major.$minor.$new_patch"
+      #     echo "New version: $new_version"
+      #     echo $new_version > ./apps/monorepo-app-2/src/app_version.txt
+      #     echo "::set-output name=new_version::$new_version"
 
-      - name: Commit new version
-        if: steps.check_commit_message.outputs.should_build == 'true'
-        run: |
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
-          git add .
-          git commit -m "Increment version to ${{ steps.increment_version.outputs.new_version }}"
-          git push https://${{ secrets.GH_PAT }}@github.com/OLG-MAN/gitops_demo.git
+      # - name: Commit new version
+      #   if: steps.check_commit_message.outputs.should_build == 'true'
+      #   run: |
+      #     git config --global user.name 'github-actions'
+      #     git config --global user.email 'github-actions@github.com'
+      #     git add .
+      #     git commit -m "Increment version to ${{ steps.increment_version.outputs.new_version }}"
+      #     git push https://${{ secrets.GH_PAT }}@github.com/OLG-MAN/gitops_demo.git
       
       - name: Log in to Docker Hub
         if: steps.check_commit_message.outputs.should_build == 'true'
@@ -74,7 +74,8 @@ jobs:
         with:
           context: ./apps/monorepo-app-2/src
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/monorepo-app-2:${{ steps.increment_version.outputs.new_version }}
+          # tags: ${{ secrets.DOCKER_USERNAME }}/monorepo-app-2:${{ steps.increment_version.outputs.new_version }}
+          tags: ${{ secrets.DOCKER_USERNAME }}/monorepo-app-2:0.0.2
 
       - name: Log out from Docker Hub
         if: steps.check_commit_message.outputs.should_build == 'true'
