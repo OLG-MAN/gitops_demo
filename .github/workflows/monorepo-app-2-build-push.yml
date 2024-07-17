@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    # paths:
-    #   - 'apps/monorepo-app-2/**'
+    paths:
+      - 'apps/monorepo-app-2/**'
 
 jobs:
   build-and-push:
@@ -75,7 +75,7 @@ jobs:
           context: ./apps/monorepo-app-2/src
           push: true
           # tags: ${{ secrets.DOCKER_USERNAME }}/monorepo-app-2:${{ steps.increment_version.outputs.new_version }}
-          tags: ${{ secrets.DOCKER_USERNAME }}/monorepo-app-2:0.0.2
+          tags: ${{ secrets.DOCKER_USERNAME }}/monorepo-app-2:0.0.1
 
       - name: Log out from Docker Hub
         if: steps.check_commit_message.outputs.should_build == 'true'

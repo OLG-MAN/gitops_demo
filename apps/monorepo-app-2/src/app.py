@@ -3,4 +3,4 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Monorepo-app-2 v0.0.1 GH Actions2"
+    return "Monorepo-app-2 v0.0.1"
