@@ -390,7 +390,7 @@ docker build -t olegan/k8s-info-app:0.0.1 ./apps/base-python-app/src
 docker push olegan/k8s-info-app:0.0.1
 
 # Apply on kind cluster
-kubectl apply -f ./apps/base-python-app/deploy/
+kubectl apply -f ./apps/base-python-app/deploy/  
 ```
 
 ##### Monitoring (TBD)
