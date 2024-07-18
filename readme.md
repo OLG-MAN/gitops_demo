@@ -281,7 +281,7 @@ kubectl get all
 curl localhost:30005
 ```
 
-##### Separate repo app 3: gchr-app (imperative way)
+##### Separate repo app 3: ghcr-app (imperative way)
 ##### Using GHCR repo approach for CD (Auto deploy by scanning GHCR repo)
 
 ```
