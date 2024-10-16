@@ -105,8 +105,8 @@ flux -n default get all
 ##### Update/Build/Push monorepo-app-1
 ```
 # Change app version in app.py and deployment.yaml files
---- ./apps/monorepo-app-1/src/app.py
---- ./apps/monorepo-app-1/deploy/deployment.yaml
+# ./apps/monorepo-app-1/src/app.py
+# ./apps/monorepo-app-1/deploy/deployment.yaml
 
 # Re-Build new app version with Docker (on Win11)
 docker build -t monorepo-app-1:0.0.2 ./apps/monorepo-app-1/src
