@@ -114,6 +114,9 @@ docker build -t monorepo-app-1:0.0.2 ./apps/monorepo-app-1/src
 # Load the image to our demo kind cluster
 kind load docker-image monorepo-app-1:0.0.2 --name demo
 
+# Auth to GitHub
+gh auth login
+
 # Commit and push changes to the repo for flux CD automation
 git add .
 git commit  -m "Update monorepo-app-1 to 0.0.2"
@@ -191,7 +194,7 @@ flux create source git helm-git-app \
   --url=https://github.com/OLG-MAN/gitops_demo_app \
   --branch=helm-git-app \
   --namespace=default \
-  --timeout=1m   \
+  --timeout=1m \
   --export > ./apps-infra/helm-git-app/gitrepository.yaml
 
 
@@ -292,13 +295,13 @@ docker push olegan/ghcr-app:0.0.1
 # Checking our GH token and update if need with `delete:packages, repo, user, write:packages` permissions.
 
 # Workaround to login and push artifact in case of multiple envs (e.g. win11/docker-desktop and working docker container) 
-# Login and push artifact from repo to ghcr.io (from win11/docker-descktop)
+# Login and push artifact from repo to ghcr.io (from win11/docker-desktop, use PAT key for pass)
 docker login ghcr.io -u olg-man
 
-# Flux command for Powershell 
+# Flux command for PowerShell 
 flux push artifact oci://ghcr.io/olg-man/ghcr-app:0.0.1-$((git rev-parse --short HEAD)) --path=".\manifests" --source="$(git config --get remote.origin.url)" --revision="$(git branch --show-current)@sha1:$(git rev-parse HEAD)"
 
-# Push to ghcr.io (for WSL or linux container, not used during this guide only as FYI) 
+# FYI ONLY! Push to ghcr.io for WSL or Linux host (because during this guide we use win11 and docker-desktop)
 flux push artifact oci://ghcr.io/olg-man/ghcr-app:0.0.1-$(git rev-parse --short HEAD) \
   --path="./manifests" \
   --source="$(git config --get remote.origin.url)" \
@@ -349,10 +352,10 @@ chmod 700 get_helm.sh
 # Creating Helm Repository (based on GitHub pages)
 helm package ./helm-chart/
 
-# Loging to GHCR registry with helm 
+# Loging to GHCR registry with helm (2nd option for win11)
 helm registry login ghcr.io -u olg-man 
 OR
-docker login ghcr.io -u olg-man 
+docker login ghcr.io -u olg-man
 
 # Push Helm chart/package to GHCR
 helm push ghcr-helm-app-0.0.1.tgz oci://ghcr.io/olg-man/
@@ -383,7 +386,8 @@ kubectl get all
 curl localhost:30007
 ```
 
-##### Python k8s info app
+##### Python k8s info app (To be included insted simple app)
+
 ```
 # Build and push app with Docker (on Win11) 
 docker build -t olegan/k8s-info-app:0.0.1 ./apps/base-python-app/src
@@ -392,8 +396,23 @@ docker push olegan/k8s-info-app:0.0.1
 # Apply on kind cluster
 kubectl apply -f ./apps/base-python-app/deploy/  
 ```
-  
-##### Monitoring (TBD)
+
+### Cleanup
+
+```
+# From Win11
+kind delete cluster --name demo
+
+# Cleanup images from docker
+# Cleanup pushed images from DockerHub
+
+# Delete ./flux-clusters folder
+# Reset values for apps
+# Commit changes
+```
+
+##### Monitoring (Example, TBD)
+
 ```
 # Using https://github.com/fluxcd/flux2-monitoring-example as a base and implement it in our demo
 in paths:
@@ -413,10 +432,7 @@ flux bootstrap github \
 ```
  
 ##### Prometheus, Grafana, Loki (TBD)
-
-
 ##### Secrets Management (TBD)
 ##### Sealed Secrets, SOPS (TBD)
-
 
 ----------------------------------------------------------------------------------------------------------------------------
