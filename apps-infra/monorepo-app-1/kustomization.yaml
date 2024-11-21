@@ -9,4 +9,4 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name:  monorepo-app-1
+    name: monorepo-app-1
